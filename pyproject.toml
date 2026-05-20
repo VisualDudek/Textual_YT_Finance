@@ -12,3 +12,7 @@ dependencies = [
     "pyyaml>=6.0.3",
     "textual>=8.2.7",
 ]
+
+[project.scripts]
+update = "run_update_yt_db:main"
+main = "main:main"
