@@ -11,7 +11,7 @@ class AppConfig:
     # MongoDB settings
     mongo_uri: Optional[str] = os.getenv("MONGO_URI")
     mongo_database_name: str = "youtube_data"
-    mongo_collection_name: str = "videos"
+    mongo_collection_name: str = "videos_finance"
     
     # UI settings
     column_headers: tuple = ("Time", "Title", "Duration")
