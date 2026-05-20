@@ -11,4 +11,4 @@ run:
 [group("Start App")]
 [doc("Add YT channel based on provided YT url")]
 add:
-	uv run ./src/youtube.py
+	uv run ./src/add_yt_channel.py
