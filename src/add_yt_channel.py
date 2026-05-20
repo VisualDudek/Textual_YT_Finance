@@ -15,6 +15,10 @@ logging.basicConfig(level=logging.INFO)
 
 def load_youtube_config(file_path: str) -> dict:
     """Load YouTube configuration from a YAML file."""
+    import os
+    if not os.path.exists(file_path):
+        with open(file_path, "w") as file:
+            yaml.dump({"channels": []}, file)
     with open(file_path, "r") as file:
         yt_config = yaml.safe_load(file)
     return yt_config
