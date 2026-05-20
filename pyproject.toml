@@ -1,3 +1,5 @@
+# cSpell:disable
+
 [project]
 name = "textual-yt-finance"
 version = "0.1.0"
