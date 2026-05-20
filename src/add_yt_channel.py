@@ -4,12 +4,12 @@ import yaml
 import logging
 
 from urllib.parse import parse_qs, urlparse
-from config import config
+from src.appConfig import app_config
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from rich.prompt import Prompt
 from rich.console import Console
-from models import YTChannel, VideoYT
+from models.models import YTChannel, VideoYT
 
 logging.basicConfig(level=logging.INFO)
 
@@ -28,9 +28,9 @@ def save_youtube_config(file_path: str, data: dict):
 def get_video_duration(video: VideoYT) -> str:
     """Call YouTube API to get the duration of a video."""
     youtube = build(
-        config.youtube_api_service_name, 
-        config.youtube_api_version, 
-        developerKey=config.youtube_api_key,
+        app_config.youtube_api_service_name, 
+        app_config.youtube_api_version, 
+        developerKey=app_config.youtube_api_key,
         )
 
     try:
@@ -76,9 +76,11 @@ def get_video_id_from_url(url: str) -> str | None:
 
     # Regex for more robust matching if the above simple parsing fails for some edge cases
     # This regex tries to find common patterns for video IDs.
+    # cspell:disable
     regex_patterns = [
         r'(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})'
     ]
+    # cspell:enable
     for pattern in regex_patterns:
         match = re.search(pattern, url)
         if match:
@@ -88,21 +90,21 @@ def get_video_id_from_url(url: str) -> str | None:
     return None
 
 
-def get_channel_id_from_video_url(video_url: str) -> tuple[str, str] | None:
+def get_channel_id_from_video_url(video_url: str) -> tuple[str, str] | tuple[None, None]:
     """
     Fetches the YouTube Channel ID for a given video URL.
     """
 
     video_id = get_video_id_from_url(video_url)
     if not video_id:
-        return None
+        return None, None
 
     try:
         # Build the YouTube API service object
         youtube = build(
-            config.youtube_api_service_name, 
-            config.youtube_api_version, 
-            developerKey=config.youtube_api_key,
+            app_config.youtube_api_service_name, 
+            app_config.youtube_api_version, 
+            developerKey=app_config.youtube_api_key,
             )
 
         # Call the videos.list method to retrieve video info
@@ -125,7 +127,7 @@ def get_channel_id_from_video_url(video_url: str) -> tuple[str, str] | None:
             return (channel_id, channel_title)
         else:
             print(f"No video found with ID: {video_id}. The video might be private, deleted, or the ID is incorrect.")
-            return None
+            return None, None
 
     except HttpError as e:
         print(f"An HTTP error {e.resp.status} occurred: {e.content.decode()}")
@@ -133,13 +135,13 @@ def get_channel_id_from_video_url(video_url: str) -> tuple[str, str] | None:
             print("This might be due to an incorrect API key, exceeded quota, or the API not being enabled.")
         elif e.resp.status == 404:
              print(f"Video with ID '{video_id}' not found.")
-        return None
+        return None, None
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-        return None
+        return None, None
 
 
-def add_channel_to_config(channel_id: str, channel_title: str, config_file: str):
+def add_channel_to_config(channel_id: str | None, channel_title: str | None, config_file: str):
     """
     Adds a new channel ID and title to the YouTube configuration file.
     """
@@ -155,13 +157,13 @@ def add_channel_to_config(channel_id: str, channel_title: str, config_file: str)
     
     # Fetch uploads_id for the new channel
     youtube = build(
-        config.youtube_api_service_name, 
-        config.youtube_api_version, 
-        developerKey=config.youtube_api_key
+        app_config.youtube_api_service_name, 
+        app_config.youtube_api_version, 
+        developerKey=app_config.youtube_api_key
     )
 
     channel_request = youtube.channels().list(
-        id=channel_id,  # Tutaj jest możliwość podania kilku ID kanału
+        id=channel_id,  # ??? You can provide several channel IDs here if needed
         part='snippet,contentDetails',
     )
     channel_response = channel_request.execute()
@@ -180,7 +182,7 @@ def add_channel_to_config(channel_id: str, channel_title: str, config_file: str)
     yt_config['channels'].append(new_channel)
 
     # Save the updated config back to the YAML file (preserves all existing data)
-    save_youtube_config(config.yt_config_file, yt_config)
+    save_youtube_config(app_config.yt_config_file, yt_config)
 
     # Add the new channel
     print(f"Added new channel: [{channel_title}] with ID: {channel_id}")
@@ -192,9 +194,9 @@ def get_last_videos(channel: YTChannel, max_results: int=3) -> list[VideoYT]:
 
     # Build the YouTube API service object
     youtube = build(
-        config.youtube_api_service_name, 
-        config.youtube_api_version, 
-        developerKey=config.youtube_api_key
+        app_config.youtube_api_service_name, 
+        app_config.youtube_api_version, 
+        developerKey=app_config.youtube_api_key
         )
 
     playlist_request = youtube.playlistItems().list(
@@ -267,4 +269,4 @@ if __name__ == '__main__':
     else:
         print("\nFailed to retrieve Channel ID.")
 
-    add_channel_to_config(channel_id, channel_title, config.yt_config_file)
+    add_channel_to_config(channel_id, channel_title, app_config.yt_config_file)
