@@ -3,6 +3,8 @@ name = "textual-yt-finance"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
+    "google-api-python-client>=2.196.0",
+    "google-genai>=2.4.0",
     "python-dotenv>=1.2.2",
     "textual>=8.2.7",
 ]
