@@ -1,0 +1,35 @@
+name: Update MongoDB
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */5 * * *'  # Runs every 5 hours
+
+jobs:
+  update_db:
+    name: python
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
+
+      - name: Install dependencies
+        run: |
+          uv sync
+
+      - name: Update MongoDB
+        run: |
+          uv run update
+        env:
+          MONGO_URI: ${{ secrets.MONGO_URI }}
+          YT_API_KEY: ${{ secrets.YT_API_KEY }}
+          GOOGLE_AI_API_KEY: ${{ secrets.GOOGLE_AI_API_KEY }}
+
