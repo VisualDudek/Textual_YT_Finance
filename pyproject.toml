@@ -16,3 +16,6 @@ dependencies = [
 [project.scripts]
 update = "run_update_yt_db:main"
 main = "main:main"
+
+[tool.uv]
+package = true

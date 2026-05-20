@@ -80,7 +80,7 @@ class DatabaseService:
         
         db = self.client[config.mongo_database_name]
         # TODO: Make view name configurable in appConfig
-        loaded_data = list(db.latest_20.find())
+        loaded_data = list(db.latest_20_finance.find())
 
         data: dict[str, List[VideoYT]] = {}
         field_names = {f.name for f in fields(VideoYT)}

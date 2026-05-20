@@ -1,0 +1,16 @@
+CustomListView {
+    width: 2fr;
+}
+
+CustomDataTable {
+    width: 9fr;
+}
+
+SummaryScreen {
+    align: center middle;
+}
+
+SummaryScreen Markdown {
+    width: 60%;
+    height: 90%;
+}

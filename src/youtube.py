@@ -4,12 +4,12 @@ import yaml
 import logging
 
 from urllib.parse import parse_qs, urlparse
-from config import config
+from appConfig import app_config as config
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from rich.prompt import Prompt
 from rich.console import Console
-from models import YTChannel, VideoYT
+from models.models import YTChannel, VideoYT
 
 logging.basicConfig(level=logging.INFO)
 

@@ -12,3 +12,8 @@ run:
 [doc("Add YT channel based on provided YT url")]
 add:
 	uv run ./src/add_yt_channel.py
+
+[group("Utils")]
+[doc("Update db with latest videos from all channels")]
+update:
+	uv run update

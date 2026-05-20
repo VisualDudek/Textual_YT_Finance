@@ -1,5 +1,5 @@
 from google import genai
-from config import config
+from appConfig import app_config as config
 from google.genai import types
 
 
