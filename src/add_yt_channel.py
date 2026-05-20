@@ -4,7 +4,7 @@ import yaml
 import logging
 
 from urllib.parse import parse_qs, urlparse
-from src.appConfig import app_config
+from appConfig import app_config
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from rich.prompt import Prompt
