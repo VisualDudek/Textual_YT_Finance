@@ -3,7 +3,7 @@ name: Update MongoDB
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 20,12 * * *'  # Runs at 20:00 and 12:00
+    - cron: "0 12,19 * * *" # Runs at 12:00 and 19:00 UTC every day
 
 jobs:
   update_db:
@@ -32,4 +32,3 @@ jobs:
           MONGO_URI: ${{ secrets.MONGO_URI }}
           YT_API_KEY: ${{ secrets.YT_API_KEY }}
           GOOGLE_AI_API_KEY: ${{ secrets.GOOGLE_AI_API_KEY }}
-
